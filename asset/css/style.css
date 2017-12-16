@@ -1,0 +1,172 @@
+.loginpanel{
+	margin-top: 5em;
+}
+
+.regpanel{
+	margin-top: 4em;
+}
+
+.main-login{
+ 	background-color: #fff;
+    /* shadows and rounded borders */
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+
+}
+
+.main-reg{
+ 	background-color: #fff;
+    /* shadows and rounded borders */
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+
+}
+
+.main-center{
+ 	margin-top: 30px;
+ 	margin: 0 auto;
+ 	max-width: 100%;
+    padding: 25px 40px;
+
+}
+
+.title {
+	font-size: 50px;
+    font-family: 'Passion One', cursive;
+    font-weight: 400;
+}
+
+#error {
+    text-align: center;
+    color: red;
+    font-weight: bold;
+}
+
+#success {
+    text-align: center;
+    color: green;
+    font-weight: bold;
+}
+
+
+.profilecard {
+    padding-top: 50px;
+}
+
+.profileview{
+    width: 100%;
+    padding-right: 1px;
+    padding-left: 1px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.table-user-information > tbody > tr {
+    border-top: 1px solid rgb(221, 221, 221);
+}
+
+.table-user-information > tbody > tr:first-child {
+    border-top: 0;
+}
+
+.table-user-information > tbody > tr > td {
+    border-top: 0;
+}
+
+.profilePic {
+    margin-left: 15%;
+    width: 220px;
+    height: 250px;
+}
+
+#header {
+    background: #4196a5;
+    color: #ffffff;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    padding-top: 20px;
+}
+
+.create{
+    padding-top: 10px;
+}
+
+.bookCover{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.books {
+    padding-top: 20px;
+}
+
+.jumbotron {
+    text-align: center;
+    background: #f3f9a2;
+}
+
+.indexHeading{
+    font-family: "Bradley Hand ITC", sans-serif!important;
+    font-weight: bold;
+}
+
+.indexBody {
+    font-family: cooper black;
+    background: #e8fdcf;
+}
+
+.viewBook {
+    background: #f5eaf3;
+}
+
+.indexBook {
+    font-family: cooper black;
+    background: #f9e9ae;
+}
+
+.cardBody {
+    background: #e1fdf2;
+}
+
+.cardHead {
+    background: #d0d1f9;
+}
+
+@media only screen and (max-width: 576px){
+    .profileSetting{
+        padding-left: 5px!important;
+        padding-right: 5px!important;
+        padding-top: 5px!important;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    .profileSetting{
+        padding-left: 50px;
+        padding-right: 50px;
+        padding-top: 30px;
+        padding-bottom: 20px;
+    }
+    .profilePhoto{
+        padding-bottom: 20px;
+        width: 280px;
+        height: 300px;
+    }
+}
+
+@media only screen and (min-width: 1200px){
+    .profileSetting{
+        padding-left: 100px;
+        padding-right: 100px;
+        padding-top: 30px;
+        padding-bottom: 20px;
+    }
+}
