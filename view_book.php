@@ -1,5 +1,5 @@
 <?php 
-error_reporting(0);
+//error_reporting(0);
 session_start();
 if (!isset($_SESSION['user_login']) || isset($_GET['id']) == '') {
     header('Location: index.php');
@@ -7,9 +7,10 @@ if (!isset($_SESSION['user_login']) || isset($_GET['id']) == '') {
 }
 require 'config.php';
 $username = $_SESSION['user_login'];
+$id = mysqli_real_escape_string($conn, $_GET['id']);
+
 if (isset($_GET)) {
-    $id = mysqli_real_escape_string($conn, $_GET['id']);
-    $sqlQuery = "SELECT `book_name`, `book_author`, `book_body`, `book_cover` FROM `book_info` WHERE `id` = '$id'";
+    $sqlQuery = "SELECT `book_name`, `book_author`, `book_body`, `book_cover`, `totalVisit` FROM `book_info` WHERE `id` = '$id'";
     $result= mysqli_query($conn, $sqlQuery);
     $rows = mysqli_fetch_assoc($result);
     if ($rows) {
@@ -17,8 +18,14 @@ if (isset($_GET)) {
         $bookauthor = $rows['book_author'];
         $bookbody = $rows['book_body'];
         $bookcover = $rows['book_cover'];
+        $bookhits = $rows['totalVisit'];
     }
 }
+$bookhits = $bookhits + 1;
+$mostVisitQuery = "UPDATE `book_info` SET `totalVisit` = '$bookhits' WHERE `id` = '$id'";
+$mostVisitResult = mysqli_query($conn, $mostVisitQuery);
+
+
 if(isset($bookname) == NULL || isset($bookauthor) == NULL || isset($bookbody) == NULL){
     header('location: error.php');
 }
@@ -34,12 +41,6 @@ if(isset($bookname) == NULL || isset($bookauthor) == NULL || isset($bookbody) ==
     <link rel="stylesheet" href="asset/css/bootstrap.min.css">
     <link rel="stylesheet" href="asset/css/style.css">
     <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
-    <!-- <script src="asset/js/jquery.min.js"></script>
-    <script src="asset/js/vendor/popper.min.js"></script>
-    <script src="asset/js/bootstrap.min.js"></script> -->
     <style type="text/css">
         img {
             border: 1px solid #ddd; /* Gray border */
@@ -91,6 +92,10 @@ if(isset($bookname) == NULL || isset($bookauthor) == NULL || isset($bookbody) ==
                                     <i class="fa fa-cogs" aria-hidden="true"></i>
                                     Setting
                                 </a>
+                                <a class="dropdown-item" href="change_password.php">
+                                    <i class="fa fa-key" aria-hidden="true"></i>
+                                    Change Password
+                                </a>
                             </div>
                         </li>
                         <li class="nav-item">
@@ -140,5 +145,8 @@ if(isset($bookname) == NULL || isset($bookauthor) == NULL || isset($bookbody) ==
             </p>
         </div>
     </div>
+    <script src="asset/js/jquery-3.2.1.slim.min.js"></script>
+    <script src="asset/js/popper.min.js"></script>
+    <script src="asset/js/bootstrap.js"></script>
 </body>
 </html>

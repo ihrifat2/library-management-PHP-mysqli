@@ -32,13 +32,7 @@ if(isset($bookname) == NULL || isset($bookauthor) == NULL || isset($bookbody) ==
     <link rel="stylesheet" href="asset/css/bootstrap.min.css">
     <link rel="stylesheet" href="asset/css/style.css">
     <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
     <script src="http://cdn.ckeditor.com/4.6.1/standard/ckeditor.js"></script>
-    <!-- <script src="asset/js/jquery.min.js"></script>
-    <script src="asset/js/vendor/popper.min.js"></script>
-    <script src="asset/js/bootstrap.min.js"></script> -->
 </head>
 <body>
     <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -79,6 +73,10 @@ if(isset($bookname) == NULL || isset($bookauthor) == NULL || isset($bookbody) ==
                                 <a class="dropdown-item" href="setting.php">
                                     <i class="fa fa-cogs" aria-hidden="true"></i>
                                     Setting
+                                </a>
+                                <a class="dropdown-item" href="change_password.php">
+                                    <i class="fa fa-key" aria-hidden="true"></i>
+                                    Change Password
                                 </a>
                             </div>
                         </li>
@@ -151,6 +149,9 @@ if(isset($bookname) == NULL || isset($bookauthor) == NULL || isset($bookbody) ==
             });
         }, 4000);
     </script>
+    <script src="asset/js/jquery-3.2.1.slim.min.js"></script>
+    <script src="asset/js/popper.min.js"></script>
+    <script src="asset/js/bootstrap.js"></script>
 </body>
 </html>
 <?php
@@ -189,5 +190,5 @@ if (isset($_POST['bookEditBtn'])) {
         }
     }
 }
-
+mysqli_close($conn);
 ?>

@@ -20,9 +20,8 @@ function sendmail($name, $email, $senderSubject, $senderMessage){
         $mail->Port = 587;                                      // TCP port to connect to
 
         //Recipients
-        //$mail->setFrom('bibliothecam@rubaiyat.com', 'Bibliothecam');
         $mail->setFrom('sword@imran.dx.am', 'Bibliothecam');
-        $mail->addAddress($email, $name);          // Add a recipient
+        $mail->addAddress($email, $name);                       // Add a recipient
         
 
         $mail->isHTML(true);                                    // Set email format to HTML

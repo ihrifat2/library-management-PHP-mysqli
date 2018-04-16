@@ -31,12 +31,6 @@ mysqli_close($conn);
     <link rel="stylesheet" href="asset/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="asset/css/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
-    <!-- <script src="asset/js/jquery.min.js"></script>
-    <script src="asset/js/vendor/popper.min.js"></script>
-    <script src="asset/js/bootstrap.min.js"></script> -->
     <style type="text/css">
         img {
             border: 1px solid #ddd;
@@ -88,6 +82,10 @@ mysqli_close($conn);
                                     <i class="fa fa-cogs" aria-hidden="true"></i>
                                     Setting
                                 </a>
+                                <a class="dropdown-item" href="change_password.php">
+                                    <i class="fa fa-key" aria-hidden="true"></i>
+                                    Change Password
+                                </a>
                             </div>
                         </li>
                         <li class="nav-item">
@@ -125,7 +123,7 @@ mysqli_close($conn);
             <div class="row">
                 <div class="col-md-4">
                     <a href="view_profile.php">
-                        <img class="card-img-top profilePic rounded" src="asset/uploads/<?php echo $photo; ?>" alt="Card image cap" style="width: 200px;">
+                        <img class="card-img-top profilePic rounded" src="asset/uploads/<?php echo $photo; ?>" alt="<?php echo ucwords($name); ?>" style="width: 200px;">
                     </a>
                 </div>
                 <div class="col-md-8 card-body">
@@ -187,5 +185,8 @@ mysqli_close($conn);
             </div>
         </div>
     </div>
+    <script src="asset/js/jquery-3.2.1.slim.min.js"></script>
+    <script src="asset/js/popper.min.js"></script>
+    <script src="asset/js/bootstrap.js"></script>
 </body>
 </html>

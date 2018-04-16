@@ -28,12 +28,6 @@ if ($rows) {
     <link rel="stylesheet" href="asset/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="asset/css/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
-    <!-- <script src="asset/js/jquery.min.js"></script>
-    <script src="asset/js/vendor/popper.min.js"></script>
-    <script src="asset/js/bootstrap.min.js"></script> -->
     <style>
         img {
             border: 1px solid #ddd;
@@ -85,6 +79,10 @@ if ($rows) {
                                     <i class="fa fa-cogs" aria-hidden="true"></i>
                                     Setting
                                 </a>
+                                <a class="dropdown-item" href="change_password.php">
+                                    <i class="fa fa-key" aria-hidden="true"></i>
+                                    Change Password
+                                </a>
                             </div>
                         </li>
                         <li class="nav-item">
@@ -122,7 +120,7 @@ if ($rows) {
                 <form class="form-group row" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" enctype="multipart/form-data">
                     <div class="col-md-4">
                         <a href="setting.php">
-                            <img class="card-img-top profilePhoto rounded" src="asset/uploads/<?php echo $photo; ?>" alt="avater" style="width: 250px; padding: 5px 5px 5px 5px;">
+                            <img class="card-img-top profilePhoto rounded" src="asset/uploads/<?php echo $photo; ?>" alt="<?php echo ucwords($name); ?>" style="width: 250px; padding: 5px 5px 5px 5px;">
                         </a>
                         <input type="file" class="btn btn-outline-dark" name="uploaded" accept="image/png, image/jpeg, image/gif" style="width: 100%">
                     </div>
@@ -206,6 +204,9 @@ if ($rows) {
             });
         }, 4000);
     </script>
+    <script src="asset/js/jquery-3.2.1.slim.min.js"></script>
+    <script src="asset/js/popper.min.js"></script>
+    <script src="asset/js/bootstrap.js"></script>
 </body>
 </html>
 
@@ -225,6 +226,7 @@ if (isset($_POST['btn_setting'])) {
     $phone = validate_input($_POST['phone']);
     $facebook = validate_input($_POST['facebook']);
     $twitter = validate_input($_POST['twitter']);
+    $ok = 0;
 
     // File information
     $uploaded_name = $_FILES[ 'uploaded' ][ 'name' ];
@@ -241,7 +243,8 @@ if (isset($_POST['btn_setting'])) {
     $temp_file    .= DIRECTORY_SEPARATOR . md5( uniqid() . $uploaded_name ) . '.' . $uploaded_ext;
 
     if (empty($uploaded_name)) {
-        echo "<script>document.getElementById('error').innerHTML = 'Please upload a photo.' </script>";
+        $target_file = $photo;
+        $ok = 1;
     }else{
         // Is it an image?
         if( ( strtolower( $uploaded_ext ) == "jpg" || strtolower( $uploaded_ext ) == "jpeg" || strtolower( $uploaded_ext ) == "png" ) ) {
@@ -253,13 +256,7 @@ if (isset($_POST['btn_setting'])) {
                 }
                 else {
                     // Yes!
-                    $query_for_settings = "UPDATE `user_info` SET `name`='$name', `photo`='$target_file', `address`='$address', `phone`='$phone', `facebook`='$facebook', `twitter`='$twitter' WHERE `username` = '$username'";
-                    $result_for_settings = mysqli_query($conn, $query_for_settings);
-                    if ($result_for_settings) {
-                        echo "<script>document.getElementById('success').innerHTML = 'Profile updated.' </script>";
-                    }else{
-                        echo "<script>document.getElementById('error').innerHTML = 'Your image was not uploaded due to database error.' </script>";
-                    }
+                    $ok = 1;
                 }
             }else{
                 echo "<script>document.getElementById('error').innerHTML = 'Photo is too large. The maximum upload limit is 1MB.' </script>";
@@ -268,6 +265,15 @@ if (isset($_POST['btn_setting'])) {
         else {
             // Invalid file
             echo "<script>document.getElementById('error').innerHTML = 'Your image was not uploaded. We can only accept JPEG or PNG images.' </script>"; 
+        }
+    }
+    if ($ok == 1) {
+        $query_for_settings = "UPDATE `user_info` SET `name`='$name', `photo`='$target_file', `address`='$address', `phone`='$phone', `facebook`='$facebook', `twitter`='$twitter' WHERE `username` = '$username'";
+        $result_for_settings = mysqli_query($conn, $query_for_settings);
+        if ($result_for_settings) {
+            echo "<script>document.getElementById('success').innerHTML = 'Profile updated.' </script>";
+        }else{
+            echo "<script>document.getElementById('error').innerHTML = 'Profile not updated.' </script>";
         }
     }
 }

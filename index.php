@@ -1,7 +1,6 @@
 <?php 
 session_start();
 require 'config.php';
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,13 +13,7 @@ require 'config.php';
     <link rel="stylesheet" href="asset/css/bootstrap.min.css">
     <link rel="stylesheet" href="asset/css/style.css">
     <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
-    <!-- <script src="asset/js/jquery.min.js"></script>
-    <script src="asset/js/vendor/popper.min.js"></script>
-    <script src="asset/js/bootstrap.min.js"></script> -->
-    <style type="text/css">
+    <style>
         img {
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -28,6 +21,23 @@ require 'config.php';
         }
         img:hover {
             box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+        }
+        .sidebar .nav-item{
+            border-bottom: 1px solid #c6c6c6;
+            border-radius: 5px;
+        }
+        .nav-item a {
+            color: #000;
+        }
+        .sidebar .nav-item a:hover {
+            background-color: #989898!important;
+            color: #fff;
+        }
+        .nav{
+            color: #000;
+            background-color: #f1f1f1!important;
+            z-index: 1;
+            overflow: auto;
         }
     </style>
 </head>
@@ -71,6 +81,10 @@ require 'config.php';
                                     <i class="fa fa-cogs" aria-hidden="true"></i>
                                     Setting
                                 </a>
+                                <a class="dropdown-item" href="change_password.php">
+                                    <i class="fa fa-key" aria-hidden="true"></i>
+                                    Change Password
+                                </a>
                             </div>
                         </li>
                         <li class="nav-item">
@@ -107,39 +121,83 @@ require 'config.php';
                 <p style="font-family: snap itc; font-size: 24px;">Create your own virtual library just the way you want!!!</p>
             </div>
         </div>
-        <div class="container">
+        <div class="container-fluid">
             <div class="row">
-                <?php
-                    if (isset($_SESSION['user_login'] )) {
-                        $username = $_SESSION['user_login'];
-                        $bookshowdata = array();
-                        $bookshowquery = "SELECT `id`, `book_name`, `book_author`, `book_cover` FROM `book_info`";
-                        $bookshowresult = $conn->query($bookshowquery);
-                        if ($bookshowresult) {
-                            while ($bookshowrows = $bookshowresult->fetch_array(MYSQLI_ASSOC)) {
-                                $bookshowdata[] = $bookshowrows;
+                <div class="col-md-4 col-lg-3 sidebar">
+                    <ul class="nav nav-pills flex-column">
+                        <?php
+                            if (isset($_SESSION['user_login'] )) {
+                                echo '
+                                    <li class="nav-item">
+                                        <a class="nav-link active" href="#">Most Visit <span class="sr-only">(current)</span></a>
+                                    </li>
+                                ';
+                                $username = $_SESSION['user_login'];
+                                $mostVisitdata = array();
+                                $mostVisitquery = "SELECT `id`, `book_name` FROM `book_info` ORDER BY `totalVisit` DESC";
+                                $mostVisitresult = $conn->query($mostVisitquery);
+                                if ($mostVisitresult) {
+                                    while ($mostVisitrows = $mostVisitresult->fetch_array(MYSQLI_ASSOC)) {
+                                        $mostVisitdata[] = $mostVisitrows;
+                                    }
+                                    $mostVisitresult->close();
+                                }                                
+                                foreach ($mostVisitdata as $totalVisitrow) {
+                                    echo '
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="view_book.php?id='.$totalVisitrow['id'].'">'.ucfirst($totalVisitrow['book_name']).'</a>
+                                        </li>
+                                    ';
+                                }
                             }
-                            $bookshowresult->close();
-                        }                                
-                        foreach ($bookshowdata as $bookrow) {
-                            echo '
-                                <div class="col-lg-3 col-md-4 col-sm-5 books">
-                                    <h5 class="text-truncate" style="font-family: snap itc;">'.ucfirst($bookrow['book_name']).'
-                                    </h5>
-                                    <a href="view_book.php?id='.$bookrow['id'].'">
-                                        <img class="bookCover" title="'.ucwords($bookrow['book_name']).'" src="asset/books/'.$bookrow['book_cover'].'" width="180" height="250">
-                                    </a>
-                                    <br>
-                                    <a class="btn btn-outline-secondary" href="view_book.php?id='.$bookrow['id'].'">View details &raquo;</a>
-                                </div>
-                            ';
+                        ?>
+                    </ul>
+                </div>
+                <div class="col-md-8 col-lg-9 row">
+                    <?php
+                        if (isset($_SESSION['user_login'] )) {
+                            $username = $_SESSION['user_login'];
+                            $bookshowdata = array();
+                            $bookshowquery = "SELECT `id`, `book_name`, `book_author`, `book_cover` FROM `book_info`";
+                            $bookshowresult = $conn->query($bookshowquery);
+                            if ($bookshowresult) {
+                                while ($bookshowrows = $bookshowresult->fetch_array(MYSQLI_ASSOC)) {
+                                    $bookshowdata[] = $bookshowrows;
+                                }
+                                $bookshowresult->close();
+                            }                                
+                            foreach ($bookshowdata as $bookrow) {
+                                echo '
+                                    <div class="col-lg-3 col-md-6 col-sm-4 col-xs-6 books">
+                                        <div class="hovereffect">
+                                            <a href="view_book.php?id='.$bookrow['id'].'">
+                                                <img class="img-responsive bookCover" src="asset/books/'.$bookrow['book_cover'].'" width="180" height="250">
+                                            </a>
+                                            <div class="overlay">
+                                                <a class="info" href="view_book.php?id='.$bookrow['id'].'">View details &raquo;</a>
+                                                <h4 class="mt-4 text-light" >'.ucfirst($bookrow['book_name']).'</h4>
+                                                
+                                            </div>
+                                        </div>
+                                        <br>
+                                    </div>
+                                ';
+                            }
+                            mysqli_close($conn);
                         }
-                        mysqli_close($conn);
-                    }
-                ?>
+                    ?>
+                </div>                
             </div>
             <hr>
         </div>
     </main>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();   
+        });
+    </script>
+    <script src="asset/js/jquery-3.2.1.slim.min.js"></script>
+    <script src="asset/js/popper.min.js"></script>
+    <script src="asset/js/bootstrap.js"></script>
 </body>
 </html>

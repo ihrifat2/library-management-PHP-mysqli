@@ -18,13 +18,7 @@ $username = $_SESSION['user_login'];
     <link rel="stylesheet" href="asset/css/bootstrap.min.css">
     <link rel="stylesheet" href="asset/css/style.css">
     <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
     <script src="http://cdn.ckeditor.com/4.6.1/standard/ckeditor.js"></script>
-    <!-- <script src="asset/js/jquery.min.js"></script>
-    <script src="asset/js/vendor/popper.min.js"></script>
-    <script src="asset/js/bootstrap.min.js"></script> -->
     <style>
         img {
             border: 1px solid #ddd; /* Gray border */
@@ -74,6 +68,10 @@ $username = $_SESSION['user_login'];
                                 <a class="dropdown-item" href="setting.php">
                                     <i class="fa fa-cogs" aria-hidden="true"></i>
                                     Setting
+                                </a>
+                                <a class="dropdown-item" href="change_password.php">
+                                    <i class="fa fa-key" aria-hidden="true"></i>
+                                    Change Password
                                 </a>
                             </div>
                         </li>
@@ -128,13 +126,13 @@ $username = $_SESSION['user_login'];
     <div class="bd-example profileSetting">
         <div class="card ">
             <div class="card-header cardHead">
-                <h3>Books</h1>
+                <h3>Books</h3>
             </div>
             <div class="card-body cardBody">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
-                            <input class="form-control" type="text" id="bookInput" onkeyup="searchFilter()" placeholder="Search Book by name...">
+                            <input class="form-control" type="text" id="bookInput" onkeyup="searchFilter()" maxlength="100" placeholder="Search Book by name...">
                         </div>
                     </div>
                     <br>
@@ -147,9 +145,20 @@ $username = $_SESSION['user_login'];
                             <th></th>
                         </tr>
                         <?php
+
+                        // Pagination Start
+
+                        include("pagination.php");
+
+                        $page = (int) (!isset($_GET["page"]) ? 1 : $_GET["page"]);
+                        $limit = 5;
+                        $startpoint = ($page * $limit) - $limit;
+                        $statement = "book_info WHERE `username` = '$username'";
+                        
+                        // Pagination End
+
                         $bookdata = array();
-                        $bookquery = "SELECT `id`, `book_name`, `book_author`, `book_cover` FROM `book_info` WHERE `username` = '$username'";
-                        $bookresult = $conn->query($bookquery);
+                        $bookresult=mysqli_query($conn, "SELECT `id`, `book_name`, `book_author`, `book_cover` FROM {$statement} LIMIT {$startpoint} , {$limit}");
                         if ($bookresult) {
                             while ($bookrows = $bookresult->fetch_array(MYSQLI_ASSOC)) {
                                 $bookdata[] = $bookrows;
@@ -178,6 +187,12 @@ $username = $_SESSION['user_login'];
                         }
                         ?>
                     </table>
+                    <?php
+                    // Pagination 
+                        echo "<div id='paging' >";
+                        echo pagination($statement,$limit,$page);
+                        echo "</div>";
+                    ?>
                 </div>
             </div>
         </div>
@@ -196,11 +211,11 @@ $username = $_SESSION['user_login'];
                     <div class="modal-body">
                         <div class="form-group">
                             <b><label>Book Title</label></b>
-                            <input type="text" name="booktitle" class="form-control" placeholder="Book Title ..." required="">
+                            <input type="text" name="booktitle" class="form-control" maxlength="45" placeholder="Book Title ..." required="">
                         </div>
                         <div class="form-group">
                             <b><label>Author</label></b>
-                            <input type="text" name="bookauthor" class="form-control" placeholder="Author ..." required="">
+                            <input type="text" name="bookauthor" class="form-control" maxlength="45" placeholder="Author ..." required="">
                         </div>
                         <div class="form-group">
                             <b><label>Book Body</label></b>
@@ -273,6 +288,9 @@ $username = $_SESSION['user_login'];
             document.cookie="bookId="+id;
         }
     </script>
+    <script src="asset/js/jquery-3.2.1.slim.min.js"></script>
+    <script src="asset/js/popper.min.js"></script>
+    <script src="asset/js/bootstrap.js"></script>
 </body>
 </html>
 <?php
@@ -308,7 +326,22 @@ if (isset($_POST['bookaddbtn'])) {
     $temp_file    .= DIRECTORY_SEPARATOR . md5( uniqid() . $uploaded_name ) . '.' . $uploaded_ext;
 
     if (empty($uploaded_name)) {
-        echo "<script>document.getElementById('error').innerHTML = 'Please upload a photo.' </script>";
+        $uploaded_name = 'noimage.png';
+        // Can we move the file to the upload folder?
+        if( !move_uploaded_file( $uploaded_tmp, $dir . $target_file ) ) {
+            // No 
+            echo "<script>document.getElementById('error').innerHTML = 'Your image is not uploaded.' </script>";
+        }
+        else {
+            // Yes!
+            $query = "INSERT INTO `book_info`(`id`, `username`, `book_name`, `book_author`, `book_body`, `book_cover`) VALUES (NULL, '$username', '$bookTitle', '$bookAuthor', '$bookDescription', '$target_file')";
+            $result = mysqli_query($conn, $query);
+            if ($result) {
+                echo "<script>javascript:document.location='book.php'</script>";
+            } else {
+                echo "<script>document.getElementById('error').innerHTML = 'Your image was not uploaded due to database error.' </script>";
+            }
+        }
     }else{
         // Is it an image?
         if( ( strtolower( $uploaded_ext ) == "jpg" || strtolower( $uploaded_ext ) == "jpeg" || strtolower( $uploaded_ext ) == "png" ) ) {

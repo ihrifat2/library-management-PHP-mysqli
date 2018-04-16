@@ -5,114 +5,120 @@ if (isset($_SESSION['user_login'])) {
 	exit();
 }
 require 'config.php';
-
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-	<meta charset="UTF-8">
-	<title>Registration</title>
-	<link rel="Shortcut Icon" href="favicon.ico" type="icon"/>
-	<link rel="stylesheet" href="asset/css/bootstrap.min.css">
-	<link rel="stylesheet" href="asset/css/style.css">
-	<link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
-	<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
-	<link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Sign up</title>
+    <link rel="Shortcut Icon" href="favicon.ico" type="icon"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+	<link rel="stylesheet" href="asset/css/bulma.css"/>
+	<link rel="stylesheet" type="text/css" href="asset/css/login.css">
+    <link rel="stylesheet" href="asset/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 </head>
 <body>
+	<section class="hero is-success is-fullheight">
+		<div class="hero-body">
+			<div class="container has-text-centered">
+				<div class="column is-4 is-offset-4">
+					<h3 class="title has-text-grey">Registration</h3>
+					<div class="box">
+						<figure class="avatar">
+							<img src="asset/img/logo.PNG" width="100">
+						</figure>
+						<form class="form-horizontal" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 
-	<div class="container">
-		<div class="row regpanel"> 
-			<div class="main-reg main-center">
-				<div class="" id="txtdiv">
-			        <strong id="txtmessage"></strong>
-			    </div>
-				<form class="form-horizontal" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
-					<div class="panel-heading">
-		               <div class="panel-title text-center">
-		               		<h1 class="title">Registration</h1>
-		               	</div>
-		            </div>
+							<!-- Full name -->
 
-		            <div class="form-group">
-						<div class="cols-sm-10">
-							<div class="input-group">
-								<input type="text"  class="form-control" name="fullname" maxlength="35" id="name" placeholder="Enter your Name" autocomplete="off" autofocus="on" />
-								<span class="input-group-addon">
-									<i class="fa fa-users" aria-hidden="true"></i>
-								</span>
+							<div class="field">
+								<div class="control">
+									<input class="input is-large" type="text" name="fullname" maxlength="35" id="name" placeholder="Enter your Name" autofocus="">
+								</div>
 							</div>
-						</div>
-					</div>
 
-					<div class="form-group">
-						<div class="cols-sm-10">
-							<div class="input-group">
-								<input type="email" class="form-control" name="email" maxlength="35" id="email" placeholder="Enter your Email" autocomplete="on" />
-								<span class="input-group-addon">
-									<i class="fa fa-envelope" aria-hidden="true"></i>
-								</span>
+							<!-- Email -->
+
+							<div class="field">
+								<div class="control">
+									<input class="input is-large" type="email" name="email" maxlength="35" id="email" placeholder="Enter your Email" onBlur="checkEmail()">
+									<p class="help" id="email-status"></p>
+									<p><img src="asset/img/LoaderIcon.gif" id="loaderIcon" style="display:none; width: 100px" /></p>
+								</div>
 							</div>
-						</div>
-					</div>
 
-					<div class="form-group">
-						<div class="cols-sm-10">
-							<div class="input-group">
-								<input type="text" class="form-control" name="uname" maxlength="30" id="username" placeholder="Enter your Username" autocomplete="off" />
-								<span class="input-group-addon">
-									<i class="fa fa-user" aria-hidden="true"></i>
-								</span>
+							<!-- Username -->
+
+							<div class="field">
+								<div class="control">
+									<input type="text" class="input is-large" name="username" maxlength="30" id="username" placeholder="Enter your Username" autocomplete="off" onBlur="checkUsername()"/>
+									<p class="help" id="username-status"></p>
+									<p><img src="asset/img/LoaderIcon.gif" id="loaderIcon" style="display:none; width: 100px" /></p>
+								</div>
 							</div>
-						</div>
-					</div>
 
-					<div class="form-group">
-						<div class="cols-sm-10">
-							<div class="input-group">
-								<input type="password" class="form-control" name="passwd" maxlength="50" id="password" placeholder="Enter your Password" autocomplete="off"/>
-								<span class="input-group-addon">
-									<i class="fa fa-key fa-fw"></i>
-								</span>
+							<!-- password -->
+
+							<div class="field">
+								<div class="control">
+									<input class="input is-large" type="password" name="passwd" maxlength="35" id="password" placeholder="Enter your Password">
+								</div>
 							</div>
-						</div>
-					</div>
 
-					<div class="form-group">
-						<div class="cols-sm-10">
-							<div class="input-group">
-								<input type="password" class="form-control" name="conpasswd" maxlength="50" id="password" placeholder="Confirm Password" autocomplete="off" />
-								<span class="input-group-addon">
-									<i class="fa fa-key fa-fw"></i>
-								</span>
+							<!-- confirm password -->
+							
+							<div class="field">
+								<div class="control">
+									<input class="input is-large" type="password" name="conpasswd" maxlength="50" id="conpassword" placeholder="Confirm Password">
+								</div>
 							</div>
-						</div>
+							<p id="error"></p>
+							<button type="submit" name="btn_reg" id="regbtn" class="button is-block is-info is-large">
+								<i class="fa fa-user-circle" aria-hidden="true"></i>
+								<b>Sign up</b>
+							</button>
+						</form>
 					</div>
-
-					<p id="error"></p>
-					<div class="form-group">
-						<button type="submit" name="btn_reg" class="btn btn-outline-dark btn-md btn-block">
-							<i class="fa fa-user-circle" aria-hidden="true"></i>
-							<b>Sign up</b>
-						</button>
-					</div>
-					
-					<div class="form-group">
-			            <a class="btn btn-outline-success btn-md btn-block" href="login.php">
-			            	<i class="fa fa-user-circle" aria-hidden="true"></i>
-			            	<b>Login</b>
-			            </a>
-			         </div>
-				</form>
+					<p class="has-text-grey">
+						<a href="login.php">Login</a> &nbsp;·&nbsp;
+						<a href="../">Need Help?</a>
+					</p>
+				</div>
 			</div>
 		</div>
-	</div>
+	</section>
 	<script>
-		window.setTimeout(function() {
-            $(".fadeIn").fadeTo(500, 0).slideUp(500, function(){
-                $(this).remove(); 
+		function checkUsername() {
+            $("#loaderIcon").show();
+            jQuery.ajax({
+                url: "check_availability.php",
+                data:'username='+$("#username").val(),
+                type: "POST",
+                success:function(data){
+                    $("#username-status").html(data);
+                    $("#loaderIcon").hide();
+                },
+                error:function (){}
             });
-        }, 4000);
+        }
+        function checkEmail() {
+            $("#loaderIcon").show();
+            jQuery.ajax({
+                url: "check_availability.php",
+                data:'email='+$("#email").val(),
+                type: "POST",
+                success:function(data){
+                    $("#email-status").html(data);
+                    $("#loaderIcon").hide();
+                },
+                error:function (){}
+            });
+        }
 	</script>
 </body>
 </html>
@@ -130,7 +136,7 @@ if (isset($_POST['btn_reg'])) {
 	$name = validate_input($_POST['fullname']);
 	$email = validate_input($_POST['email']);
     $profilePhoto = validate_input("robot.png");
-	$username = validate_input($_POST['uname']);
+	$username = validate_input($_POST['username']);
 	$pass1 = validate_input($_POST['passwd']);
 	$pass2 = validate_input($_POST['conpasswd']);
 	
